@@ -30,17 +30,36 @@ export default function AboutPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-16"
+          className="mb-16 flex flex-col sm:flex-row items-start sm:items-center gap-8"
         >
-          <div className="flex items-center gap-2 text-cyan-400 text-sm font-mono mb-4">
-            <span className="text-slate-600">//</span> about-me
+          {/* Headshot */}
+          <div className="flex-shrink-0 flex flex-col items-center">
+            <div className="relative w-28 h-28 rounded-full overflow-hidden ring-2 ring-cyan-400/30 ring-offset-2 ring-offset-[#070d1a]">
+              <Image
+                src="/headshot.jpg"
+                alt="Carter Dockery"
+                fill
+                className="object-cover object-top"
+                priority
+              />
+            </div>
+            <span className="mt-3 text-xs px-3 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-400 font-medium">
+              Open to Work
+            </span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-            Hi, I'm <span className="gradient-text">Carter</span>
-          </h1>
-          <p className="text-slate-400 text-lg max-w-2xl leading-relaxed">
-            A Computer Information Systems graduate passionate about using technology to solve real business problems — whether that's building analytics pipelines, writing full-stack applications, or automating IT workflows.
-          </p>
+
+          {/* Text */}
+          <div>
+            <div className="flex items-center gap-2 text-cyan-400 text-sm font-mono mb-3">
+              <span className="text-slate-600">//</span> about-me
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              Hi, I'm <span className="gradient-text">Carter</span>
+            </h1>
+            <p className="text-slate-400 text-lg max-w-2xl leading-relaxed">
+              A Computer Information Systems graduate passionate about using technology to solve real business problems — whether that's building analytics pipelines, writing full-stack applications, or automating IT workflows.
+            </p>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -105,29 +124,6 @@ export default function AboutPage() {
             transition={{ delay: 0.2 }}
             className="space-y-5"
           >
-            {/* Headshot */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 }}
-              className="flex flex-col items-center bg-[#111827] rounded-2xl p-6 card-glow"
-            >
-              <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-cyan-400/30 ring-offset-2 ring-offset-[#111827] mb-4">
-                <Image
-                  src="/headshot.jpg"
-                  alt="Carter Dockery"
-                  fill
-                  className="object-cover object-top"
-                  priority
-                />
-              </div>
-              <p className="text-white font-semibold">Carter Dockery</p>
-              <p className="text-slate-500 text-xs mt-0.5 text-center">Software Developer · Data Engineer</p>
-              <span className="mt-3 text-xs px-3 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-400 font-medium">
-                Open to Work
-              </span>
-            </motion.div>
-
             {/* Quick facts */}
             <div className="bg-[#111827] rounded-2xl p-6 card-glow">
               <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Quick Facts</h3>
