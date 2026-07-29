@@ -28,12 +28,23 @@ export const metadata: Metadata = {
     "IT Professional",
     "Portfolio",
   ],
+  metadataBase: new URL("https://www.carterdockery.com"),
   authors: [{ name: "Carter Dockery", url: "https://www.linkedin.com/in/carter-dockery-924741350/" }],
   openGraph: {
     title: "Carter Dockery | Software Developer & Data Engineer",
     description:
       "Software Developer, Data & BI Developer, and IT Professional. Building full-stack applications, data pipelines, analytics dashboards, and IT automation tools.",
     type: "website",
+    url: "https://www.carterdockery.com",
+    siteName: "Carter Dockery Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Carter Dockery | Software Developer & Data Engineer",
+    description: "Software Developer, Data & BI Developer, and IT Professional.",
+  },
+  alternates: {
+    canonical: "https://www.carterdockery.com",
   },
 };
 

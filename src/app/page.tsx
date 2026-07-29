@@ -185,13 +185,12 @@ export default function HomePage() {
           >
             View Projects <ArrowRight size={16} />
           </Link>
-          <a
-            href="/resume.pdf"
-            download
+          <Link
+            href="/resume"
             className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 text-slate-300 text-sm font-medium hover:bg-white/5 hover:border-white/25 transition-all"
           >
-            <Download size={16} /> Download Résumé
-          </a>
+            <Download size={16} /> View Résumé
+          </Link>
           <a
             href="https://github.com/cad171uakron"
             target="_blank"
