@@ -23,9 +23,13 @@ export default function ResumePage() {
               Online <span className="gradient-text">Résumé</span>
             </h1>
           </div>
-          <div className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-sm opacity-50 cursor-not-allowed whitespace-nowrap" title="PDF coming soon">
+          <a
+            href="/resume.pdf"
+            download="Dockery-Carter-Resume.pdf"
+            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-sm hover:from-cyan-400 hover:to-blue-400 transition-all whitespace-nowrap"
+          >
             <Download size={16} /> Download PDF
-          </div>
+          </a>
         </motion.div>
 
         {/* Resume card */}
@@ -278,7 +282,11 @@ export default function ResumePage() {
           viewport={{ once: true }}
           className="mt-8 text-center text-slate-500 text-sm"
         >
-          PDF version coming soon.
+          Download the PDF above or{' '}
+          <a href="mailto:cad171@uakron.edu" className="text-cyan-400 hover:underline">
+            email me
+          </a>{' '}
+          to connect.
         </motion.div>
       </div>
     </div>
