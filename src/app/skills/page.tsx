@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { skillCategories, type Skill } from '@/data/skills';
 import { getProjectBySlug } from '@/data/projects';
+import SkillsRadar from '@/components/SkillsRadar';
 
 const levelColors = {
   proficient: 'bg-cyan-500/20 border-cyan-500/30 text-cyan-400',
@@ -135,8 +136,7 @@ export default function SkillsPage() {
 
         {/* Categories */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {skillCategories.map((cat, i) => (
-            <motion.div
+          {skillCategories.map((cat, i) => (            <motion.div
               key={cat.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -181,6 +181,11 @@ export default function SkillsPage() {
             ))}
           </div>
         </motion.div>
+
+        {/* Proficiency radar chart */}
+        <div className="mt-6">
+          <SkillsRadar />
+        </div>
       </div>
     </div>
   );

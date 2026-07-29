@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Code2 } from 'lucide-react';
 import { GithubIcon } from '@/components/Icons';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -13,6 +14,7 @@ const navLinks = [
   { href: '/projects', label: 'Projects' },
   { href: '/skills', label: 'Skills' },
   { href: '/experience', label: 'Experience' },
+  { href: '/analytics', label: 'Analytics' },
   { href: '/resume', label: 'Résumé' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -81,7 +83,8 @@ export default function Navbar() {
           </div>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
+            <ThemeToggle />
             <a
               href="https://github.com/cad171uakron"
               target="_blank"

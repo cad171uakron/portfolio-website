@@ -7,6 +7,7 @@ import { Send, CheckCircle, AlertCircle, Mail } from 'lucide-react';
 export default function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [apiError, setApiError] = useState('');
   const [errors, setErrors] = useState<Partial<typeof form>>({});
 
   const validate = () => {
@@ -30,15 +31,36 @@ export default function ContactForm() {
       return;
     }
     setErrors({});
+    setApiError('');
     setStatus('sending');
 
-    // Mailto fallback — replace with a real backend or service like Resend/Formspree when deployed
-    const subject = encodeURIComponent(form.subject || `Portfolio contact from ${form.name}`);
-    const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-    window.location.href = `mailto:cad171@uakron.edu?subject=${subject}&body=${body}`;
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
 
-    // Simulate success state
-    setTimeout(() => setStatus('success'), 800);
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 503) {
+          // Email service not configured — fall back to mailto
+          const sub = encodeURIComponent(form.subject || `Portfolio contact from ${form.name}`);
+          const bod = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
+          window.open(`mailto:cad171@uakron.edu?subject=${sub}&body=${bod}`);
+          setStatus('success');
+          return;
+        }
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setStatus('success');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+      setApiError(msg);
+      setStatus('error');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,7 +82,7 @@ export default function ContactForm() {
           <CheckCircle size={32} className="text-green-400" />
         </div>
         <h3 className="text-xl font-bold text-white mb-2">Message sent!</h3>
-        <p className="text-slate-400 mb-6">Your email client should have opened. I'll respond within a day or two.</p>
+        <p className="text-slate-400 mb-6">Thanks! I&apos;ll get back to you within a day or two.</p>
         <button
           onClick={() => { setStatus('idle'); setForm({ name: '', email: '', subject: '', message: '' }); }}
           className="text-cyan-400 text-sm hover:underline"
@@ -173,6 +195,12 @@ export default function ContactForm() {
           </>
         )}
       </button>
+
+      {status === 'error' && apiError && (
+        <p className="text-red-400 text-sm text-center flex items-center justify-center gap-1">
+          <AlertCircle size={14} /> {apiError}
+        </p>
+      )}
 
       <p className="text-slate-600 text-xs text-center">
         Or reach me directly at{' '}

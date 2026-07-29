@@ -7,6 +7,7 @@ import { ArrowRight, Download, Mail, ChevronDown, Database, Code, Server, BarCha
 import { GithubIcon, LinkedinIcon } from '@/components/Icons';
 import ProjectCard from '@/components/ProjectCard';
 import BootSequence from '@/components/BootSequence';
+import LighthouseBadge from '@/components/LighthouseBadge';
 import { getFeaturedProjects } from '@/data/projects';
 
 const stats = [
@@ -315,6 +316,13 @@ export default function HomePage() {
               <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Lighthouse badge */}
+      <section className="py-6 px-6">
+        <div className="max-w-2xl mx-auto">
+          <LighthouseBadge />
         </div>
       </section>
 

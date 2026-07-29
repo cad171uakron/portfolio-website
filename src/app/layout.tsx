@@ -55,6 +55,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable}`}>
+      {/* Inline script runs before first paint to prevent theme flash */}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light');}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-[#070d1a]">
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
