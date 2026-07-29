@@ -7,6 +7,183 @@ import { ArrowLeft, ExternalLink, CheckCircle, ChevronRight } from 'lucide-react
 import { GithubIcon } from '@/components/Icons';
 import { getProjectBySlug, projects } from '@/data/projects';
 import { use } from 'react';
+import CodeBlock from '@/components/CodeBlock';
+import ArchitectureFlow, { FlowNode } from '@/components/ArchitectureFlow';
+
+// Per-project code snippets
+const CODE_SNIPPETS: Record<string, { language: string; filename: string; code: string }[]> = {
+  'azure-retail-pipeline': [
+    {
+      language: 'python',
+      filename: 'etl_pipeline.py',
+      code: `import pandas as pd
+from sqlalchemy import create_engine, text
+
+# Load and transform raw CSV data
+df = pd.read_csv('retail_sales.csv', parse_dates=['order_date'])
+df['revenue']  = df['quantity'] * df['unit_price']
+df['month']    = df['order_date'].dt.to_period('M').astype(str)
+df['is_repeat_customer'] = df.groupby('customer_id')['order_id'].transform('count') > 1
+
+# Push to Azure SQL Database
+engine = create_engine(AZURE_SQL_CONNECTION_STRING)
+df.to_sql('sales_fact', engine, if_exists='replace', index=False, chunksize=5000)
+
+# Create reporting views
+with engine.connect() as conn:
+    conn.execute(text("""
+        CREATE OR REPLACE VIEW vw_SalesSummary AS
+        SELECT month, SUM(revenue) AS total_revenue,
+               COUNT(DISTINCT customer_id) AS unique_customers
+        FROM sales_fact GROUP BY month
+    """))`,
+    },
+  ],
+  'casino-platform': [
+    {
+      language: 'javascript',
+      filename: 'chip-transaction.service.js',
+      code: `// Atomic chip operation — SELECT FOR UPDATE prevents race conditions
+async function processGameResult(userId, betAmount, outcome) {
+  return await db.transaction(async (trx) => {
+    // Lock the row for this transaction
+    const [profile] = await trx('profiles')
+      .where({ user_id: userId })
+      .forUpdate()  // SELECT FOR UPDATE
+      .select('chips');
+
+    if (profile.chips < betAmount)
+      throw new Error('Insufficient chips');
+
+    const payout = outcome.win ? betAmount * outcome.multiplier : 0;
+    const delta  = payout - betAmount;
+
+    await trx('profiles')
+      .where({ user_id: userId })
+      .increment('chips', delta);
+
+    // Immutable audit ledger
+    await trx('transactions').insert({
+      user_id: userId, amount: delta,
+      type: outcome.win ? 'win' : 'loss',
+      game: outcome.game, created_at: new Date(),
+    });
+
+    return { newBalance: profile.chips + delta, payout };
+  });
+}`,
+    },
+    {
+      language: 'javascript',
+      filename: 'blackjack.engine.js',
+      code: `// Pure function — no DB access, no HTTP. Fully unit-testable.
+function getBasicStrategyAction(playerHand, dealerUpcard, deckCount = 6) {
+  const total  = playerHand.hardTotal();
+  const isSoft = playerHand.isSoft();
+  const isPair = playerHand.isPair();
+
+  if (isPair) return PAIR_STRATEGY[playerHand.cards[0].rank][dealerUpcard.rank];
+  if (isSoft) return SOFT_STRATEGY[total][dealerUpcard.rank];
+  return HARD_STRATEGY[total][dealerUpcard.rank];
+}
+
+function calculateEV(playerHand, dealerUpcard, betAmount) {
+  const action    = getBasicStrategyAction(playerHand, dealerUpcard);
+  const winProb   = WIN_PROBABILITY_TABLE[playerHand.hardTotal()][dealerUpcard.rank];
+  const ev        = (winProb * betAmount) - ((1 - winProb) * betAmount);
+  return { action, ev: ev.toFixed(2), winProbability: (winProb * 100).toFixed(1) };
+}`,
+    },
+  ],
+  'stratforge-ai': [
+    {
+      language: 'typescript',
+      filename: 'strategy.engine.ts',
+      code: `interface RoundState {
+  teamMoney:  number;
+  enemyMoney: number;
+  roundPhase: 'pistol' | 'eco' | 'buy' | 'force';
+  mapPosition: CalloutZone;
+  aliveCount:  number;
+}
+
+// Deterministic strategy recommendation
+function recommendStrategy(state: RoundState): TacticalRecommendation {
+  const { teamMoney, enemyMoney, roundPhase, aliveCount } = state;
+
+  // Economy analysis
+  if (teamMoney < ECO_THRESHOLD)
+    return { buy: 'eco', rifles: 0, reason: 'Save for full buy' };
+
+  if (enemyMoney < RIFLE_THRESHOLD && roundPhase !== 'pistol')
+    return { buy: 'force', rifles: Math.min(aliveCount, Math.floor(teamMoney / RIFLE_COST)) };
+
+  // Map-position aware strategy
+  const calloutSuggestions = getCalloutStrategy(state.mapPosition, aliveCount);
+  return { buy: 'full', rifles: aliveCount, callouts: calloutSuggestions };
+}`,
+    },
+  ],
+  'robotics-ecommerce': [
+    {
+      language: 'javascript',
+      filename: 'auth.middleware.js',
+      code: `const jwt    = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+// JWT authentication middleware
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access denied' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+}
+
+// Secure login — constant-time compare via bcrypt
+async function login(req, res) {
+  const { email, password } = req.body;
+  const [user] = await db.query(
+    'SELECT * FROM users WHERE email = ?', [email]  // parameterized
+  );
+  if (!user || !(await bcrypt.compare(password, user.password_hash)))
+    return res.status(401).json({ error: 'Invalid credentials' });
+
+  const token = jwt.sign({ id: user.id, email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  res.json({ token });
+}`,
+    },
+  ],
+};
+
+// Per-project architecture flow nodes
+const ARCH_FLOWS: Record<string, FlowNode[]> = {
+  'azure-retail-pipeline': [
+    { icon: '📄', label: 'CSV Files',    sublabel: 'Raw data',      color: '#64748b' },
+    { icon: '🐼', label: 'pandas ETL',   sublabel: 'Transform',     color: '#f59e0b' },
+    { icon: '☁️',  label: 'Azure SQL',   sublabel: 'Database',      color: '#3b82f6' },
+    { icon: '📐', label: 'SQL Views',    sublabel: '3 reporting',   color: '#8b5cf6' },
+    { icon: '📊', label: 'Power BI',     sublabel: 'Dashboard',     color: '#f97316' },
+  ],
+  'casino-platform': [
+    { icon: '🖥️',  label: 'Client',      sublabel: 'HTML/CSS/JS',   color: '#38bdf8' },
+    { icon: '🚦', label: 'Express',      sublabel: 'Router',        color: '#22c55e' },
+    { icon: '🎛️',  label: 'Controller',  sublabel: 'Thin layer',    color: '#a78bfa' },
+    { icon: '⚙️',  label: 'Service',     sublabel: 'Business logic', color: '#f59e0b' },
+    { icon: '🎮', label: 'Game Engine',  sublabel: 'Pure functions', color: '#ec4899' },
+    { icon: '🗄️',  label: 'MySQL 8.0',   sublabel: 'Persistence',   color: '#0ea5e9' },
+  ],
+  'stratforge-ai': [
+    { icon: '⚛️',  label: 'Next.js',     sublabel: 'App Router',    color: '#38bdf8' },
+    { icon: '🔌', label: 'API Routes',   sublabel: 'Middleware',    color: '#a78bfa' },
+    { icon: '🧠', label: 'Strategy',     sublabel: 'Engine',        color: '#f59e0b' },
+    { icon: '🗃️',  label: 'Prisma ORM',  sublabel: 'Database',      color: '#22c55e' },
+    { icon: '🚀', label: 'Vercel',       sublabel: 'CI/CD',         color: '#e2e8f0' },
+  ],
+};
 
 export default function ProjectCaseStudy({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -128,6 +305,13 @@ export default function ProjectCaseStudy({ params }: { params: Promise<{ slug: s
             </ul>
           </Section>
 
+          {/* Architecture Flow (visual) */}
+          {ARCH_FLOWS[slug] && (
+            <Section title="Data / Request Flow" delay={0.37}>
+              <ArchitectureFlow nodes={ARCH_FLOWS[slug]} />
+            </Section>
+          )}
+
           {/* Architecture */}
           <Section title="System Architecture" delay={0.4}>
             <div className="bg-[#070d1a] rounded-xl p-5 border border-white/5 font-mono text-sm">
@@ -139,6 +323,16 @@ export default function ProjectCaseStudy({ params }: { params: Promise<{ slug: s
               ))}
             </div>
           </Section>
+
+          {/* Code Spotlight */}
+          {CODE_SNIPPETS[slug] && (
+            <Section title="Code Spotlight" delay={0.42}>
+              <p className="text-slate-500 text-sm mb-4">Real snippets from the codebase demonstrating key engineering decisions.</p>
+              {CODE_SNIPPETS[slug].map((snippet, i) => (
+                <CodeBlock key={i} language={snippet.language} filename={snippet.filename} code={snippet.code} />
+              ))}
+            </Section>
+          )}
 
           {/* Challenges & Solutions */}
           <Section title="Challenges & How I Solved Them" delay={0.45}>

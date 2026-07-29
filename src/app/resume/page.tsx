@@ -165,6 +165,26 @@ export default function ResumePage() {
                       'Produced executive-ready KPI cards, trend analysis, and interactive filtering with cross-visual highlighting.',
                     ],
                   },
+                  {
+                    title: 'StratForge AI',
+                    slug: 'stratforge-ai',
+                    tags: ['Next.js', 'TypeScript', 'Prisma', 'Vitest', 'Vercel'],
+                    bullets: [
+                      'Built a live CS2 tactical intelligence platform with deterministic game-state analysis and economy prediction — deployed on Vercel.',
+                      'Implemented CS2 radar maps with accurately remapped 1024×1024 callout zone overlays and team profile management via Prisma ORM.',
+                      'TypeScript throughout (99.4% of codebase); round outcome workflow tests with Vitest.',
+                    ],
+                  },
+                  {
+                    title: 'Robotics E-Commerce Platform',
+                    slug: 'robotics-ecommerce',
+                    tags: ['Node.js', 'Express.js', 'MySQL', 'JWT', 'React'],
+                    bullets: [
+                      'Built a full-stack robotics e-commerce site with product catalog, cart, and checkout backed by MySQL and a Node.js/Express REST API.',
+                      'Implemented JWT authentication with bcryptjs password hashing and protected routes for user account management.',
+                      'Designed relational MySQL schema with products, orders, and users tables; all queries use parameterized statements.',
+                    ],
+                  },
                 ].map((proj) => (
                   <div key={proj.slug}>
                     <div className="flex items-center gap-3 mb-2">

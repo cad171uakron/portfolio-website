@@ -6,6 +6,7 @@ import { useRef, useEffect, useState } from 'react';
 import { ArrowRight, Download, Mail, ChevronDown, Database, Code, Server, BarChart3 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '@/components/Icons';
 import ProjectCard from '@/components/ProjectCard';
+import BootSequence from '@/components/BootSequence';
 import { getFeaturedProjects } from '@/data/projects';
 
 const stats = [
@@ -122,9 +123,12 @@ const services = [
 
 export default function HomePage() {
   const featuredProjects = getFeaturedProjects();
+  const [booted, setBooted] = useState(false);
 
   return (
-    <div className="relative bg-grid">
+    <>
+      <BootSequence onComplete={() => setBooted(true)} />
+      <div className={`relative bg-grid transition-opacity duration-700 ${booted ? 'opacity-100' : 'opacity-0'}`}>
       {/* Hero */}
       <section className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 text-center overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/8 rounded-full blur-3xl pointer-events-none" />
@@ -348,6 +352,7 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }
 
