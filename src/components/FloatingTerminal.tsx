@@ -24,6 +24,7 @@ const HELP_LINES: Line[] = [
   { text: '│  skills           Navigate to Skills page', type: 'output' },
   { text: '│  experience       Navigate to Experience page', type: 'output' },
   { text: '│  analytics        Navigate to Analytics dashboard', type: 'output' },
+  { text: '│  blog             Navigate to Blog', type: 'output' },
   { text: '│  resume           Navigate to Resume page', type: 'output' },
   { text: '│  contact          Navigate to Contact page', type: 'output' },
   { text: '│  github           Open GitHub profile', type: 'output' },
@@ -97,6 +98,7 @@ export default function FloatingTerminal() {
       case 'experience': go('/experience', 'Experience'); break;
       case 'resume': go('/resume', 'Resume'); break;
       case 'analytics': go('/analytics', 'Analytics'); break;
+      case 'blog': go('/blog', 'Blog'); break;
       case 'contact': go('/contact', 'Contact'); break;
       case 'download resume':
         push({ text: '→ Downloading resume PDF...', type: 'success' });

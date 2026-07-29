@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/skills`, priority: 0.8, changeFrequency: 'monthly' as const },
     { url: `${base}/experience`, priority: 0.8, changeFrequency: 'monthly' as const },
     { url: `${base}/analytics`, priority: 0.6, changeFrequency: 'weekly' as const },
+    { url: `${base}/blog`, priority: 0.8, changeFrequency: 'weekly' as const },
     { url: `${base}/resume`, priority: 0.9, changeFrequency: 'monthly' as const },
     { url: `${base}/contact`, priority: 0.7, changeFrequency: 'yearly' as const },
   ];
@@ -24,13 +25,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'stratforge-ai',
   ];
 
+  const blogSlugs = [
+    'azure-retail-etl-pipeline',
+    'casino-platform-architecture',
+    'powershell-it-automation',
+  ];
+
   const projectRoutes = projectSlugs.map((slug) => ({
     url: `${base}/projects/${slug}`,
     priority: 0.85,
     changeFrequency: 'monthly' as const,
   }));
 
-  return [...staticRoutes, ...projectRoutes].map((route) => ({
+  const blogRoutes = blogSlugs.map((slug) => ({
+    url: `${base}/blog/${slug}`,
+    priority: 0.75,
+    changeFrequency: 'monthly' as const,
+  }));
+
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes].map((route) => ({
     ...route,
     lastModified: now,
   }));
