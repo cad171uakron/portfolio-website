@@ -29,6 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'azure-retail-etl-pipeline',
     'casino-platform-architecture',
     'powershell-it-automation',
+    'construction-analytics-power-bi',
+    'robotics-ecommerce-full-stack',
+    'stratforge-ai-cs2-tactics',
   ];
 
   const projectRoutes = projectSlugs.map((slug) => ({
