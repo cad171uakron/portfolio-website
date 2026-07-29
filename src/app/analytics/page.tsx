@@ -59,11 +59,11 @@ const topSkills = [
 ];
 
 const siteStats = [
-  { label: 'Routes / Pages', value: '9' },
-  { label: 'React Components', value: '16+' },
+  { label: 'Routes / Pages', value: '14' },
+  { label: 'React Components', value: '13' },
   { label: 'Projects Showcased', value: '6' },
   { label: 'Skills Listed', value: '41' },
-  { label: 'Lines of TypeScript', value: '~3,500' },
+  { label: 'Lines of TypeScript', value: '~3,600' },
   { label: 'Lighthouse Avg', value: '~93' },
 ];
 
