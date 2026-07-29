@@ -24,11 +24,17 @@ export default function KonamiHandler() {
   useEffect(() => {
     let idx = 0;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === KONAMI[idx]) {
+      // Normalize: lowercase for letters, exact for arrow keys
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      const expected = KONAMI[idx].length === 1 ? KONAMI[idx].toLowerCase() : KONAMI[idx];
+
+      if (key === expected) {
         idx++;
         if (idx === KONAMI.length) { trigger(); idx = 0; }
       } else {
-        idx = e.key === KONAMI[0] ? 1 : 0;
+        // Restart from 1 if this key matches the first in the sequence
+        const first = KONAMI[0];
+        idx = key === first ? 1 : 0;
       }
     };
     window.addEventListener('keydown', handler);
