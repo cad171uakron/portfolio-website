@@ -23,19 +23,22 @@ const HELP_LINES: Line[] = [
   { text: '│  projects         Navigate to Projects page', type: 'output' },
   { text: '│  skills           Navigate to Skills page', type: 'output' },
   { text: '│  experience       Navigate to Experience page', type: 'output' },
+  { text: '│  analytics        Navigate to Analytics dashboard', type: 'output' },
   { text: '│  resume           Navigate to Resume page', type: 'output' },
   { text: '│  contact          Navigate to Contact page', type: 'output' },
   { text: '│  github           Open GitHub profile', type: 'output' },
   { text: '│  linkedin         Open LinkedIn profile', type: 'output' },
   { text: '│  whoami           Display identity', type: 'output' },
   { text: '│  ls projects      List all projects', type: 'output' },
+  { text: '│  theme            Toggle dark / light mode', type: 'output' },
+  { text: '│  download resume  Download resume PDF', type: 'output' },
   { text: '│  clear            Clear terminal', type: 'output' },
   { text: '│  sudo hire carter Try it ;)', type: 'output' },
   { text: '└─────────────────────────────────────────────────────', type: 'dim' },
 ];
 
 const INITIAL_LINES: Line[] = [
-  { text: 'Carter Dockery Portfolio  ─  Terminal v1.0', type: 'success' },
+  { text: 'Carter Dockery Portfolio  ─  Terminal v2.0', type: 'success' },
   { text: 'Type "help" for available commands. Press Ctrl+` to toggle.', type: 'dim' },
 ];
 
@@ -93,7 +96,30 @@ export default function FloatingTerminal() {
       case 'skills': go('/skills', 'Skills'); break;
       case 'experience': go('/experience', 'Experience'); break;
       case 'resume': go('/resume', 'Resume'); break;
+      case 'analytics': go('/analytics', 'Analytics'); break;
       case 'contact': go('/contact', 'Contact'); break;
+      case 'download resume':
+        push({ text: '→ Downloading resume PDF...', type: 'success' });
+        {
+          const a = document.createElement('a');
+          a.href = '/resume.pdf';
+          a.download = 'Dockery-Carter-Resume.pdf';
+          a.click();
+        }
+        break;
+      case 'theme': {
+        const isLight = document.documentElement.classList.contains('light');
+        if (isLight) {
+          document.documentElement.classList.remove('light');
+          localStorage.setItem('theme', 'dark');
+          push({ text: '→ Switched to dark mode.', type: 'success' });
+        } else {
+          document.documentElement.classList.add('light');
+          localStorage.setItem('theme', 'light');
+          push({ text: '→ Switched to light mode.', type: 'success' });
+        }
+        break;
+      }
       case 'github':
         push({ text: '→ Opening GitHub...', type: 'success' });
         window.open('https://github.com/cad171uakron', '_blank');
