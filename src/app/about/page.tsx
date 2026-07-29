@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Briefcase, Star, Code2, Heart } from 'lucide-react';
 import { education } from '@/data/experience';
@@ -104,6 +105,29 @@ export default function AboutPage() {
             transition={{ delay: 0.2 }}
             className="space-y-5"
           >
+            {/* Headshot */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 }}
+              className="flex flex-col items-center bg-[#111827] rounded-2xl p-6 card-glow"
+            >
+              <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-cyan-400/30 ring-offset-2 ring-offset-[#111827] mb-4">
+                <Image
+                  src="/headshot.jpg"
+                  alt="Carter Dockery"
+                  fill
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+              <p className="text-white font-semibold">Carter Dockery</p>
+              <p className="text-slate-500 text-xs mt-0.5 text-center">Software Developer · Data Engineer</p>
+              <span className="mt-3 text-xs px-3 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-400 font-medium">
+                Open to Work
+              </span>
+            </motion.div>
+
             {/* Quick facts */}
             <div className="bg-[#111827] rounded-2xl p-6 card-glow">
               <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Quick Facts</h3>
