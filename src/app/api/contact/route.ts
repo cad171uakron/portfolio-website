@@ -61,7 +61,8 @@ export async function POST(request: NextRequest) {
     `;
 
     const { data, error } = await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
+      // Use your verified Resend domain if configured, otherwise falls back to shared sender
+      from: process.env.RESEND_FROM_EMAIL ?? 'Portfolio Contact <onboarding@resend.dev>',
       to: ['cad171@uakron.edu'],
       replyTo: email,
       subject: emailSubject,
